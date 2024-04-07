@@ -1,7 +1,5 @@
 # Table Importer Plugin
 
-***Abandonment Notice:** I'm afraid I simply don't have the time to maintain my Grav themes and plugins. Those interested in taking over should refer to the ["Abandoned Resource Protocol"](https://learn.getgrav.org/17/advanced/grav-development#abandoned-resource-protoc). Feel free to fork and replace. So long, and thanks for all the fish.*
-
 The **Table Importer** Plugin is for [Grav CMS](http://github.com/getgrav/grav). It imports tables from JSON, YAML, and CSV formats into a page.
 
 For a demo, [visit my blog](https://perlkonig.com/demos/table-importer).
@@ -128,3 +126,5 @@ The Table Importer shortcode is a self-closing `[ti option1="value1" option2="va
 ## Credits
 
 Because PHP's builtin CSV support is...let's just say inelegant, this plugin incorporates the most excellent [PHPLeague CSV library](http://csv.thephpleague.com/).
+
+Forked from the original project and maintainer due to abandonment [Perlkonig/grav-plugin-table-importer](https://github.com/Perlkonig/grav-plugin-table-importer)
