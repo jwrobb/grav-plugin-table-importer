@@ -1,3 +1,9 @@
+# v2.3.0
+## ##/##/####
+    * Updated League CSV to version 9.8 (drops support for PHP < v7.4) 
+    * Updated Readme
+    * Added a Roadmap file
+
 # v2.2.0
 ## 07/16/2018
 
