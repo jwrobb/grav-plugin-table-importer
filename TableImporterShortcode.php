@@ -9,7 +9,6 @@ use RocketTheme\Toolbox\File\File;
 // use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use League\Csv\Reader;
 use League\Csv\Statement;
-use DebugBar\StandardDebugBar;
 
 class TableImporterShortcode extends Shortcode
 {
