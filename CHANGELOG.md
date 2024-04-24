@@ -1,4 +1,11 @@
-#v2.2.1
+# v2.3.0
+## 04/23/2024
+ 1. [](#new)
+    * Updated League CSV to version 9.8 (drops support for PHP < v7.4) 
+    * Updated CSV logic for new lib methods
+    * Updated Readme
+
+# v2.2.1
 ## 11/12/2019
 
 1. [](#bugfix)

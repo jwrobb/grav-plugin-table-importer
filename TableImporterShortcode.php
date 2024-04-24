@@ -8,6 +8,7 @@ use Symfony\Component\Yaml\Yaml;
 use RocketTheme\Toolbox\File\File;
 // use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use League\Csv\Reader;
+use League\Csv\Statement;
 
 class TableImporterShortcode extends Shortcode
 {
@@ -90,6 +91,7 @@ class TableImporterShortcode extends Shortcode
                 $reader->setEnclosure($encl);
                 $this->outerEscape = $esc;
                 $reader->setEscape($esc);
+
                 // This func is to compensate for a bug in PHP's `SplFileObject` class.
                 // https://bugs.php.net/bug.php?id=55413
                 // This func strips out the extraneous escape character.
@@ -101,7 +103,13 @@ class TableImporterShortcode extends Shortcode
                     unset($cell);
                     return $row;
                 };
-                $data = $reader->fetchAll($func);
+
+                $resultSet = Statement::create()->process($reader);
+
+                //TODO: Refactor this at some point
+                //forcing an iterator into an array is inelegant and slow
+                $data = iterator_to_array($resultSet,true);
+
                 break;
         }
 
@@ -153,6 +161,7 @@ class TableImporterShortcode extends Shortcode
 
             $output .= '</table>';
             return $output;
+
         } catch (\Exception $e) {
             return '<p>The data in "'.$fn.'" appears to be malformed. Please review the documentation.';
         }
