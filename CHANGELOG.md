@@ -1,5 +1,5 @@
 # 3.0.0
-## 
+## IN DEVELOPMENT
 
 1. [](#new)
     * Rewrote string concat table output logic
