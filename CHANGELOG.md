@@ -1,5 +1,6 @@
 # 3.0.0
 ## 
+
 1. [](#new)
     * Rewrote string concat table output logic
 
