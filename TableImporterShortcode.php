@@ -101,18 +101,6 @@ class TableImporterShortcode extends Shortcode
                 $this->outerEscape = $esc;
                 $reader->setEscape($esc);
 
-                // This func is to compensate for a bug in PHP's `SplFileObject` class.
-                // https://bugs.php.net/bug.php?id=55413
-                // This func strips out the extraneous escape character.
-                $func = function ($row) {
-                    $e = preg_quote($this->outerEscape);
-                    foreach ($row as &$cell) {
-                        $cell = preg_replace("/$e(?!$e)/", '', $cell);
-                    }
-                    unset($cell);
-                    return $row;
-                };
-
                 $resultSet = Statement::create()->process($reader);
                 $data = iterator_to_array($resultSet,true);
 
@@ -136,12 +124,10 @@ class TableImporterShortcode extends Shortcode
                 $table->setAttribute('id', $id);
             }
 
-            //Set the optional class attribute on the table element
             if(!empty($class)) $table->setAttribute('class', htmlspecialchars($class));
 
-            //Set the optional table caption
             if(!empty($caption)) $table->appendChild($doc->createElement('caption', htmlspecialchars($caption)));
-
+            
             if($header) {
                 $thead = $table->appendChild($doc->createElement('thead'));
                 $tr = $thead->appendChild($doc->createElement('tr'));
@@ -153,52 +139,18 @@ class TableImporterShortcode extends Shortcode
             }
 
             $tbody = $table->appendChild($doc->createElement('tbody'));
-
-
-
-/*
-            // Table's id can be specified by adding an `id` attribute to the shortcode
-            $id = $sc->getParameter('id', null);
-            if ($id === null)
-                $id = $this->shortcode->getId($sc);
-
-            $output .= '<table id="'.$id.'"';
-            if ($class !== null) {
-                $output .= ' class="'.htmlspecialchars($class).'"';
-            }
-            $output .= '>';
-
-            // Insert caption if given
-            if ( ($caption !== null) && (strlen($caption) > 0) ) {
-                $output .= '<caption>'.htmlspecialchars($caption).'</caption>';
-            }
-
-            if ($header) {
-                $row = array_shift($data);
-                $output .= '<thead><tr>';
-                foreach ($row as $cell) {
-                    $output .= '<th>'.$cell.'</th>';
-                }
-                $output .= '</tr></thead>';
-            }
-
-            $output .= '<tbody>';
+            
             foreach ($data as $row) {
-                $output .= '<tr>';
+                $tr = $tbody->appendChild($doc->createElement("tr"));
                 foreach ($row as $cell) {
                     if ($raw) {
-                        $output .= '<td>'.$cell.'</td>';
+                        $tr->appendChild($doc->createElement("td", $cell));
                     } else {
-                        $output .= '<td>'.htmlspecialchars($cell).'</td>';
+                        $tr->appendChild($doc->createElement("td", htmlspecialchars($cell)));
                     }
                 }
-                $output .= '</tr>';
             }
-            $output .= '</tbody>';
 
-            $output .= '</table>';
-            return $output;
-*/
             $doc->formatOutput = true;
             $doc->appendChild($table);
             $content = $doc->saveHTML();
@@ -207,12 +159,11 @@ class TableImporterShortcode extends Shortcode
 
             //TODO: Smarten this response formatting to assist with errors
         } catch (\Exception $e) {
-            return '<p>The data in "'.$fn.'" appears to be malformed. Please review the documentation.';
+            return '<p>The data in "'.$fn.'" appears to be malformed. Please review the documentation.</p><p>'. $e->getTraceAsString() .'</p>';
         }
     }
 
-    private function getPath($fn) 
-    {
+    private function getPath($fn) {
         if (Utils::startswith($fn, 'data:')) {
             $path = $this->grav['locator']->findResource('user://data', true);
             $fn = str_replace('data:', '', $fn);

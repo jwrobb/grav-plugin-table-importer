@@ -2,7 +2,7 @@
 
 The **Table Importer** Plugin is for [Grav CMS](http://github.com/getgrav/grav). It imports tables from JSON, YAML, and CSV formats into an HTML table.
 
-Demo: Not just yet, it is on the list of Todo's
+Demo: http://demo.robbins.ws/
 
 ## Installation
 
