@@ -3,12 +3,10 @@
 namespace Grav\Plugin\Shortcodes;
 
 use DOMDocument;
-use DOMElement;
 use DOMException;
 use Exception;
 use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 use Grav\Common\Utils;
-use League\Csv\HTMLConverter;
 use Symfony\Component\Yaml\Yaml;
 use League\Csv\Reader;
 use League\Csv\Statement;
@@ -37,26 +35,21 @@ class TableImporterShortcode extends Shortcode
             return "<p>Table Importer: Malformed shortcode (<tt>".htmlspecialchars($sc->getShortcodeText())."</tt>).</p>";
         }
 
-        $raw = $sc->getParameter('raw', null);
-        if ($raw === null) {
-            $raw = false;
-        } else {
-            $raw = true;
-        }
-
+        //Grab all the shortcode params
         $type = $sc->getParameter('type', null);
         $delim = $sc->getParameter('delimiter', ',');
         $encl = $sc->getParameter('enclosure', '"');
         $esc = $sc->getParameter('escape', '\\');
         $class = $sc->getParameter('class', null);
         $id = $sc->getParameter('id', null);
-        $caption = $sc->getParameter('caption', null);
-        $header = $sc->getParameter('header', null);
-        if ($header === null) {
-            $header = true;
-        } else {
-            $header = false;
-        }
+        $raw = filter_var(
+            $sc->getParameter('raw', null), FILTER_VALIDATE_BOOLEAN);
+        $caption = filter_var(
+            $sc->getParameter('caption', null), FILTER_VALIDATE_BOOLEAN);
+        $header = filter_var(
+            $sc->getParameter('header', null), FILTER_VALIDATE_BOOLEAN);
+        $footer = filter_var(
+            $sc->getParameter('footer', null), FILTER_VALIDATE_BOOLEAN);
 
         // Get absolute file name
         $abspath = null;
@@ -112,6 +105,9 @@ class TableImporterShortcode extends Shortcode
                 throw new Exception("Table Importer: Something went wrong loading '$type' data from the requested file '$fn'.");
             }
 
+            if($header) $headerData = array_shift($data);
+            if($footer) $footerData = array_pop($data);
+
             $doc = new DOMDocument('1.0');
             $table = $doc->createElement('table');
 
@@ -132,9 +128,8 @@ class TableImporterShortcode extends Shortcode
                 $thead = $table->appendChild($doc->createElement('thead'));
                 $tr = $thead->appendChild($doc->createElement('tr'));
 
-                $row = array_shift($data);
-                foreach($row as $cell) {
-                    $th = $tr->appendChild($doc->createElement('th', $cell));
+                foreach($headerData as $cell) {
+                    $tr->appendChild($doc->createElement('th', $cell));
                 }
             }
 
@@ -148,6 +143,15 @@ class TableImporterShortcode extends Shortcode
                     } else {
                         $tr->appendChild($doc->createElement("td", htmlspecialchars($cell)));
                     }
+                }
+            }
+
+            if($footer) {
+                $tfoot = $table->appendChild($doc->createElement('tfoot'));
+                $tr = $tfoot->appendChild($doc->createElement('tr'));
+
+                foreach($footerData as $cell) {
+                    $tr->appendChild($doc->createElement('td', $cell));
                 }
             }
 

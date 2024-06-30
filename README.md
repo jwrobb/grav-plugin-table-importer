@@ -95,10 +95,13 @@ By default, the content of each cell is escaped using PHP's `htmlspecialchars` f
 |:---|:---|
 |`file` |The only required parameter. It points to the datafile you wish to load. By default, the plugin looks in the same folder as the page file. This is adequate for most usage. You can also load files from the `user/data` folder by prefixing your file name with `data:` (e.g., `file=data:tables/mytable.yaml`). Broken : ~~If all you're passing is the file name, then you can shorten the code to the form `[ti=mytable.yaml/]`~~.
 |`type` |Usually unnecessary. It tells the plugin what format the data file is in. The only acceptable values are `yaml`, `json`, and `csv`. However, the plugin looks at the file name extension first. If it's `yaml`, `yml`, `json`, or `csv`, then there's no need to use the `type` option. 
-|`caption` |Will insert a `<caption>` tag containing the value of this option after being run through PHP's `htmlspecialchars`.
-|`header` | Tells the plugin whether you want a header row or not. By default, the first row is rendered as a header. Passing *any* value to `header` will disable the header row.
 |`class` |Lets you assign class definitions to the table itself. Whatever you put here will be escaped (via PHP's `htmlspecialchars`) and placed into the opening `<table>` tag.
 |`id` |Lets you specify the table tag's `id` attribute (e.g. `[ti file="mytable.yaml" id="my-custom-table-id"]` yields `<table id="my-custom-table-id">...</table>`).
+|`caption` |Will insert a `<caption>` tag containing the value of this option after being run through PHP's `htmlspecialchars`.
+|`header` |Takes first row in the data and renders a `<thead>` section in the table. Toggle on by using [any value that evaluates to TRUE](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-boolean)
+|`footer` |Takes last row in the data and renders a `<tfoot>` section in the table. Toggle on by using [any value that evaluates to TRUE](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-boolean)
+|`raw` |Disable all cell contents escaping. Toggle on by using [any value that evaluates to TRUE](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-boolean)
+
 
 ### Parameters (CSV Only)
 | Parameter | Usage |
