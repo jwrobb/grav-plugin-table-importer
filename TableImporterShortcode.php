@@ -3,6 +3,7 @@
 namespace Grav\Plugin\Shortcodes;
 
 use DOMDocument;
+use DOMElement;
 use DOMException;
 use Exception;
 use Thunder\Shortcode\Shortcode\ShortcodeInterface;
@@ -110,27 +111,15 @@ class TableImporterShortcode extends Shortcode
             $doc = new DOMDocument('1.0');
             $table = $doc->createElement('table');
 
-            //Set the optional ID attribute on the table element
-            if(!empty($id)) {
-                if (1 === preg_match(",\s,", $id)) {
-                    throw new DOMException("ID attribute's value must not contain whitespace!");
-                }
-
+            if(!empty($id))
                 $table->setAttribute('id', $id);
-            }
 
             if(!empty($class)) $table->setAttribute('class', htmlspecialchars($class));
 
             if(!empty($caption)) $table->appendChild($doc->createElement('caption', htmlspecialchars($caption)));
             
-            if($header) {
-                $thead = $table->appendChild($doc->createElement('thead'));
-                $tr = $thead->appendChild($doc->createElement('tr'));
-
-                foreach($headerData as $cell) {
-                    $tr->appendChild($doc->createElement('th', $cell));
-                }
-            }
+            if($header)
+                $table->appendChild($this->createNested($doc, $headerData, 'thead', 'tr', 'th', false));
 
             $tbody = $table->appendChild($doc->createElement('tbody'));
             
@@ -144,15 +133,9 @@ class TableImporterShortcode extends Shortcode
                     }
                 }
             }
-
-            if($footer) {
-                $tfoot = $table->appendChild($doc->createElement('tfoot'));
-                $tr = $tfoot->appendChild($doc->createElement('tr'));
-
-                foreach($footerData as $cell) {
-                    $tr->appendChild($doc->createElement('td', $cell));
-                }
-            }
+            
+            if($footer)
+                $table->appendChild($this->createNested($doc, $footerData, 'tfoot', 'tr', 'td', false));
 
             $doc->formatOutput = true;
             $doc->appendChild($table);
@@ -166,7 +149,8 @@ class TableImporterShortcode extends Shortcode
         }
     }
 
-    private function getPath($fn) {
+    private function getPath($fn) 
+    {
         if (Utils::startswith($fn, 'data:')) {
             $path = $this->grav['locator']->findResource('user://data', true);
             $fn = str_replace('data:', '', $fn);
@@ -184,11 +168,24 @@ class TableImporterShortcode extends Shortcode
         return null;
     }
 
-    private static function sanitize($fn) {
+    private static function sanitize($fn) 
+    {
         $fn = trim($fn);
         $fn = str_replace('..', '', $fn);
         $fn = ltrim($fn, DS);
         $fn = str_replace(DS.DS, DS, $fn);
         return $fn;
+    }
+    
+    private function createNested(DOMDocument $dom, array $data, string $pNode, string $rNode, string $cNode, bool $raw): DOMElement
+    {
+        $retElement = $dom->createElement($pNode);
+        $rowNode = $retElement->appendChild($dom->createElement($rNode));
+        
+        foreach($data as $cell) {
+            $rowNode->appendChild($dom->createElement($cNode, $cell));
+        }
+
+        return $retElement;
     }
 }

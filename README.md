@@ -98,9 +98,9 @@ By default, the content of each cell is escaped using PHP's `htmlspecialchars` f
 |`class` |Lets you assign class definitions to the table itself. Whatever you put here will be escaped (via PHP's `htmlspecialchars`) and placed into the opening `<table>` tag.
 |`id` |Lets you specify the table tag's `id` attribute (e.g. `[ti file="mytable.yaml" id="my-custom-table-id"]` yields `<table id="my-custom-table-id">...</table>`).
 |`caption` |Will insert a `<caption>` tag containing the value of this option after being run through PHP's `htmlspecialchars`.
-|`header` |Takes first row in the data and renders a `<thead>` section in the table. Toggle on by using [any value that evaluates to TRUE](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-boolean)
-|`footer` |Takes last row in the data and renders a `<tfoot>` section in the table. Toggle on by using [any value that evaluates to TRUE](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-boolean)
-|`raw` |Disable all cell contents escaping. Toggle on by using [any value that evaluates to TRUE](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-boolean)
+|`header` |Takes first row in the data and renders a `<thead>` section in the table. Enable by using [any value that evaluates to TRUE](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-boolean)
+|`footer` |Takes last row in the data and renders a `<tfoot>` section in the table. Enable by using [any value that evaluates to TRUE](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-boolean)
+|`raw` |Disable all cell contents escaping. Enable by using [any value that evaluates to TRUE](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-boolean)
 
 
 ### Parameters (CSV Only)
