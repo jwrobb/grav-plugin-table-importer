@@ -18,7 +18,7 @@ This will install the Table Importer plugin into your `/user/plugins` directory 
 
 ### Manual Installation
 
-To install this plugin, just download the zip version of this repository and unzip it under `/your/site/grav/user/plugins`. Then, rename the folder to `table-importer`. You can find these files on [GitHub](https://github.com/Perlkonig/grav-plugin-table-importer) or via [GetGrav.org](http://getgrav.org/downloads/plugins#extras).
+To install this plugin, just download the zip version of this repository and unzip it under `/your/site/grav/user/plugins`. Then, rename the folder to `table-importer`. You can find these files on [GitHub](https://github.com/jwrobb/grav-plugin-table-importer) or via [GetGrav.org](http://getgrav.org/downloads/plugins#extras).
 
 You should now have all the plugin files under
 

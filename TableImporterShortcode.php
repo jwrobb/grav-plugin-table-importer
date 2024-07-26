@@ -4,7 +4,6 @@ namespace Grav\Plugin\Shortcodes;
 
 use DOMDocument;
 use DOMElement;
-use DOMException;
 use Exception;
 use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 use Grav\Common\Utils;
@@ -12,7 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 use League\Csv\Reader;
 use League\Csv\Statement;
 
-
+ 
 
 class TableImporterShortcode extends Shortcode
 {
@@ -25,6 +24,8 @@ class TableImporterShortcode extends Shortcode
 
     public function process(ShortcodeInterface $sc) {
         $fn = $sc->getParameter('file', null);
+
+        //Process the file in the shortcode if no "file" param set
         if ($fn === null) {
             $fn = $sc->getShortcodeText();
             $fn = str_replace('[ti=', '', $fn);
@@ -44,6 +45,7 @@ class TableImporterShortcode extends Shortcode
         $class = $sc->getParameter('class', null);
         $id = $sc->getParameter('id', null);
         $sc->getParameter('caption', null);
+
         $raw = filter_var(
             $sc->getParameter('raw', null), FILTER_VALIDATE_BOOLEAN);
         $header = filter_var(
@@ -63,42 +65,37 @@ class TableImporterShortcode extends Shortcode
             return "<p>Table Importer: Could not find the requested data file '$fn'.</p>";
         }
 
-        // Determine what type of file it is
+        $data = null;
         if ($type === null) {
-            if ( (Utils::endswith(strtolower($fn), '.yaml')) || ((Utils::endswith(strtolower($fn), '.yml'))) ) {
-                $type = 'yaml';
-            } elseif (Utils::endswith(strtolower($fn), '.json')) {
-                $type = 'json';
-            } elseif (Utils::endswith(strtolower($fn), '.csv')) {
-                $type = 'csv';
-            } else {
-                return "<p>Table Importer: Could not determine the type of the requested data file '$fn'. This plugin only supports YAML, JSON, and CSV.</p>";
+            $type = pathinfo($fn, PATHINFO_EXTENSION);
+
+            switch($type){
+
+                case 'yml':
+                case 'yaml':
+                    $data = Yaml::parse(file_get_contents($abspath));
+                    break;
+            
+                case 'json':
+                    $data = json_decode(file_get_contents($abspath));
+                    break;
+                
+                case 'csv':
+                    $reader = Reader::createFromPath($abspath, 'r');
+                    $reader->setDelimiter($delim);
+                    $reader->setEnclosure($encl);
+                    $this->outerEscape = $esc;
+                    $reader->setEscape($esc);
+    
+                    $resultSet = Statement::create()->process($reader);
+                    $data = iterator_to_array($resultSet,true);
+                    break;
+
+                default:
+                    return "<p>Table Importer: Could not determine the type of the requested data file '$fn'. This plugin only supports YAML, JSON, and CSV.</p>";
             }
         }
 
-        // Load the data
-        $data = null;
-        switch ($type) {
-            case 'yaml':
-                $data = Yaml::parse(file_get_contents($abspath));
-                break;
-            
-            case 'json':
-                $data = json_decode(file_get_contents($abspath));
-                break;
-
-            case 'csv':
-                $reader = Reader::createFromPath($abspath, 'r');
-                $reader->setDelimiter($delim);
-                $reader->setEnclosure($encl);
-                $this->outerEscape = $esc;
-                $reader->setEscape($esc);
-
-                $resultSet = Statement::create()->process($reader);
-                $data = iterator_to_array($resultSet,true);
-
-                break;
-        }
 
         try {
             if ($data === null) {
@@ -114,12 +111,14 @@ class TableImporterShortcode extends Shortcode
             if(!empty($id))
                 $table->setAttribute('id', $id);
 
-            if(!empty($class)) $table->setAttribute('class', htmlspecialchars($class));
+            if(!empty($class)) 
+                $table->setAttribute('class', htmlspecialchars($class));
 
-            if(!empty($caption)) $table->appendChild($doc->createElement('caption', htmlspecialchars($caption)));
+            if(!empty($caption))
+                 $table->appendChild($doc->createElement('caption', htmlspecialchars($caption)));
             
             if($header)
-                $table->appendChild($this->createNested($doc, $headerData, 'thead', 'tr', 'th', false));
+                $table->appendChild($this->createNested($doc, $headerData, 'thead', 'tr', 'th'));
 
             $tbody = $table->appendChild($doc->createElement('tbody'));
             
@@ -135,7 +134,7 @@ class TableImporterShortcode extends Shortcode
             }
             
             if($footer)
-                $table->appendChild($this->createNested($doc, $footerData, 'tfoot', 'tr', 'td', false));
+                $table->appendChild($this->createNested($doc, $footerData, 'tfoot', 'tr', 'td'));
 
             $doc->formatOutput = true;
             $doc->appendChild($table);
@@ -177,7 +176,7 @@ class TableImporterShortcode extends Shortcode
         return $fn;
     }
     
-    private function createNested(DOMDocument $dom, array $data, string $pNode, string $rNode, string $cNode, bool $raw): DOMElement
+    private function createNested(DOMDocument $dom, array $data, string $pNode, string $rNode, string $cNode): DOMElement
     {
         $retElement = $dom->createElement($pNode);
         $rowNode = $retElement->appendChild($dom->createElement($rNode));
