@@ -1,8 +1,11 @@
-# 3.0.0
-## IN DEVELOPMENT
+# v3.0.0
+## 09/07/2024
 
 1. [](#new)
-    * Rewrote string concat table output logic
+    * Added table footer param and logic
+1. [](#improved)
+    * Rewrote table HTML output logic to use DOMElements rather than string concatenation
+    * Cleaned up param parsing code
 
 # v2.3.0
 ## 04/23/2024
@@ -23,7 +26,6 @@
 
 1. [](#new)
     * You can now add custom `id` tags to the tables (thanks to @mwender).
-
 1. [](#improved)
     * Improved error reporting when things go wrong.
 

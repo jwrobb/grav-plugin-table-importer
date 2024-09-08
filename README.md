@@ -114,13 +114,13 @@ By default, the content of each cell is escaped using PHP's `htmlspecialchars` f
 
 * `[ti file=test.json]` (basic import of json table in the same folder as the page itself)
 
-* `[ti file=data:test.yaml]` (basic import of yaml table in the `user/data` folder)
-
 * `[ti file=json-as-yaml.json type=yaml]` (parse a file as yaml regardless of extension)
 
 * `[ti file=file.csv enclosure=']` (parse a CSV file that uses a single quote to enclose items)
 
 * `[ti file=file.yaml header="false" class="imported"]` (basic yaml table with no header and a class of `imported`)
+
+* `[ti file="file.csv" header="yes" footer="no" caption="Just some data" class="tableClass" id="tableID"]` Lots of params, showing usage of other boolean values
 
 ## Credits
 

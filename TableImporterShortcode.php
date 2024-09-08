@@ -115,10 +115,12 @@ class TableImporterShortcode extends Shortcode
                 $table->setAttribute('class', htmlspecialchars($class));
 
             if(!empty($caption))
-                 $table->appendChild($doc->createElement('caption', htmlspecialchars($caption)));
+                $table->appendChild(
+                    $doc->createElement('caption', htmlspecialchars($caption)));
             
             if($header)
-                $table->appendChild($this->createNested($doc, $headerData, 'thead', 'tr', 'th'));
+                $table->appendChild(
+                    $this->createNested($doc, $headerData, 'thead', 'tr', 'th'));
 
             $tbody = $table->appendChild($doc->createElement('tbody'));
             
@@ -134,7 +136,8 @@ class TableImporterShortcode extends Shortcode
             }
             
             if($footer)
-                $table->appendChild($this->createNested($doc, $footerData, 'tfoot', 'tr', 'td'));
+                $table->appendChild(
+                    $this->createNested($doc, $footerData, 'tfoot', 'tr', 'td'));
 
             $doc->formatOutput = true;
             $doc->appendChild($table);
