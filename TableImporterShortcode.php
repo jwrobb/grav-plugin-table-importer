@@ -128,7 +128,8 @@ class TableImporterShortcode extends Shortcode
                 $tr = $tbody->appendChild($doc->createElement("tr"));
                 foreach ($row as $cell) {
                     if ($raw) {
-                        $tr->appendChild($doc->createElement("td", $cell));
+                        $td = $tr->appendChild($doc->createElement("td"));
+                        $td->appendChild($doc->createCDATASection($cell));
                     } else {
                         $tr->appendChild($doc->createElement("td", htmlspecialchars($cell)));
                     }
