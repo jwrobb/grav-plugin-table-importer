@@ -10,8 +10,7 @@ use Grav\Common\Utils;
 use Symfony\Component\Yaml\Yaml;
 use League\Csv\Reader;
 use League\Csv\Statement;
-
- 
+use TableImporter\TableImporterTemplate;
 
 class TableImporterShortcode extends Shortcode
 {
@@ -44,7 +43,8 @@ class TableImporterShortcode extends Shortcode
         $esc = $sc->getParameter('escape', '\\');
         $class = $sc->getParameter('class', null);
         $id = $sc->getParameter('id', null);
-        $sc->getParameter('caption', null);
+        $caption = $sc->getParameter('caption', null);
+        $sticky = $sc->getParameter('sticky', null);
 
         $raw = filter_var(
             $sc->getParameter('raw', null), FILTER_VALIDATE_BOOLEAN);
@@ -106,10 +106,27 @@ class TableImporterShortcode extends Shortcode
             if($footer) $footerData = array_pop($data);
 
             $doc = new DOMDocument('1.0');
+            $doc->formatOutput = true;
+
+            // Add sticky headers
+            // There has to be a header row, table ID, and sticky param enabled
+            if($sticky && ($header && !empty($id))) {
+                $template = new TableImporterTemplate("templates/sticky-table-headers.php");
+                $template->set("tableId",$id);
+
+                $style = $doc->createElement('style');
+                $style->appendChild(
+                    $doc->createCDATASection(
+                        $template->render()
+                ));
+                $doc->appendChild($style);
+                
+            }
+
             $table = $doc->createElement('table');
 
             if(!empty($id))
-                $table->setAttribute('id', $id);
+                $table->setAttribute('id', $id);            
 
             if(!empty($class)) 
                 $table->setAttribute('class', htmlspecialchars($class));
@@ -138,8 +155,7 @@ class TableImporterShortcode extends Shortcode
             if($footer)
                 $table->appendChild(
                     $this->createNested($doc, $footerData, 'tfoot', 'tr', 'td'));
-
-            $doc->formatOutput = true;
+            
             $doc->appendChild($table);
             $content = $doc->saveHTML();
 

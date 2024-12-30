@@ -89,11 +89,11 @@ The Table Importer shortcode is a self-closing `[ti option1="value1" option2="va
 
 By default, the content of each cell is escaped using PHP's `htmlspecialchars` function. If the `raw` option is set to anything at all, the escaping will be disabled. **Only do this if you trust the incoming data!**
 
-### Parameters
+### Parameters - Basic Usage
 
 | Parameter | Usage |
 |:---|:---|
-|`file` |The only required parameter. It points to the datafile you wish to load. By default, the plugin looks in the same folder as the page file. This is adequate for most usage. You can also load files from the `user/data` folder by prefixing your file name with `data:` (e.g., `file=data:tables/mytable.yaml`). Broken : ~~If all you're passing is the file name, then you can shorten the code to the form `[ti=mytable.yaml/]`~~.
+|`file` |The only required parameter. It points to the datafile you wish to load. By default, the plugin looks in the same folder as the page file. This is adequate for most usage. 
 |`type` |Usually unnecessary. It tells the plugin what format the data file is in. The only acceptable values are `yaml`, `json`, and `csv`. However, the plugin looks at the file name extension first. If it's `yaml`, `yml`, `json`, or `csv`, then there's no need to use the `type` option. 
 |`class` |Lets you assign class definitions to the table itself. Whatever you put here will be escaped (via PHP's `htmlspecialchars`) and placed into the opening `<table>` tag.
 |`id` |Lets you specify the table tag's `id` attribute (e.g. `[ti file="mytable.yaml" id="my-custom-table-id"]` yields `<table id="my-custom-table-id">...</table>`).
@@ -102,8 +102,14 @@ By default, the content of each cell is escaped using PHP's `htmlspecialchars` f
 |`footer` |Takes last row in the data and renders a `<tfoot>` section in the table. Enable by using [any value that evaluates to TRUE](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-boolean)
 |`raw` |Disable all cell contents escaping. Enable by using [any value that evaluates to TRUE](https://www.php.net/manual/en/filter.constants.php#constant.filter-validate-boolean)
 
+### Parameters - Table styling
 
-### Parameters (CSV Only)
+| Parameter | Usage |
+|:---|:---|
+|`sticky` |Inserts CSS to make the header section "stick" to the top of the table when scrolling. Auto-disabled if the 'header' and 'ID' parameters are not set. Warning, this inserts basic CSS that may conflict with other styles on your page. It is recommended to use your own styling if you need anything more than the basics.
+
+
+### Parameters - CSV Only
 | Parameter | Usage |
 |:---|:---|
 |`delimiter` |Defines how columns are separated. By default, the value is a comma (`,`).
