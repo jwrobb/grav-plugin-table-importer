@@ -44,7 +44,7 @@ class TableImporterShortcode extends Shortcode
         $esc = $sc->getParameter('escape', '\\');
         $class = $sc->getParameter('class', null);
         $id = $sc->getParameter('id', null);
-        $sc->getParameter('caption', null);
+        $caption = $sc->getParameter('caption', null);
 
         $raw = filter_var(
             $sc->getParameter('raw', null), FILTER_VALIDATE_BOOLEAN);
