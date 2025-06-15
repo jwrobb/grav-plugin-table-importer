@@ -103,18 +103,32 @@ form:
             default.csv.delimiter:
               type: text
               label: Delimiter.
-              help: Defines how columns are separated.
+              help: Defines how columns are separated (single char, default is ",").
               default: ','
               size: small
+              validate:
+                required: true
+                pattern: '^$|^[^\s]$'
+                message: 'Please enter only one character or leave it empty.'
+
             default.csv.enclosure:
               type: text
               label: Enclosure.
-              help: Defines how cells with special characters are contained.
+              help: Defines how cells with special characters are contained (single char default is ").
               default: '"'
               size: small
+              validate:
+                required: false
+                pattern: '^$|^.{1}$'
+                message: 'Please enter only one character or leave it empty.'
+
             default.csv.escape:
               type: text
               label: Escape.
-              help: Defines how special characters can be escaped.
-              default: '\\'
-              size: small              
+              help: "Defines how special characters can be escaped (single char default is \\)."
+              default: '\'
+              size: small
+              validate:
+                required: false
+                pattern: '^$|^.{1}$'
+                message: 'Please enter only one character or leave it empty.'            
