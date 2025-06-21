@@ -1,5 +1,5 @@
-# v3.0.2
-## 06/12/2025
+# v3.1.0
+## 06/21/2025
 
 1. [](#bugfix)
     * Fixed issue with when type was set in the shortcode
