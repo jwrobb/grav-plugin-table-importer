@@ -1,5 +1,5 @@
 name: Table Importer
-version: 3.0.2
+version: 3.1.0
 description: Imports tables from JSON, YAML, and CSV formats into HTML tables within a page
 icon: table
 author:
