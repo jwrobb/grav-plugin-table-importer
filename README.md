@@ -111,7 +111,7 @@ By default, the content of each cell is escaped using PHP's `htmlspecialchars` f
 |`escape` |Defines how special characters can be escaped. By default, the value is a backslash (`\`).
 
 ### Config defaults for parameters
-Escept for the `file` param indeed, you can set defaults.
+Except for the `file` param indeed, you can set defaults.
 Expl:
 
 ```yaml
