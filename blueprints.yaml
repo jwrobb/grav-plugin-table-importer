@@ -10,9 +10,11 @@ keywords: grav, plugin, tables, import, json, yaml, csv
 bugs: https://github.com/jwrobb/grav-plugin-table-importer/issues
 docs: https://github.com/jwrobb/grav-plugin-table-importer/blob/develop/README.md
 license: MIT
-
+compatibility:
+  grav: ["1.7","2.0"]
 dependencies:
-  - shortcode-core
+  - { name: shortcode-core, version: '>=6.0.0' }
+  - { name: grav, version: '>=1.7.37' }
 
 form:
   validation: strict
@@ -58,7 +60,7 @@ form:
           label: Caption
           help: Will insert a <caption> tag containing the value of this option after being run through PHP's htmlspecialchars.
           rows: 3
-   
+
 
         default.header:
           type: toggle
@@ -75,7 +77,7 @@ form:
         default.footer:
           type: toggle
           label: Footer
-          help: Last row <tfoot> 
+          help: Last row <tfoot>
           highlight: 1
           default: 0
           options:
@@ -131,4 +133,4 @@ form:
               validate:
                 required: false
                 pattern: '^$|^.{1}$'
-                message: 'Please enter only one character or leave it empty.'            
+                message: 'Please enter only one character or leave it empty.'

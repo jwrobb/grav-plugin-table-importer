@@ -1,3 +1,9 @@
+# v3.2.0
+## 30/10/2026
+
+1. [](#improved)
+   * Compatibility for grav 2.0 tested
+        
 # v3.1.0
 ## 06/21/2025
 

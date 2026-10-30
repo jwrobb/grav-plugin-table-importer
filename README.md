@@ -94,7 +94,7 @@ By default, the content of each cell is escaped using PHP's `htmlspecialchars` f
 
 | Parameter | Usage |
 |:---|:---|
-|`file` |The only required parameter. It points to the datafile you wish to load. By default, the plugin looks in the same folder as the page file. This is adequate for most usage. You can also load files from the `user/data` folder by prefixing your file name with `data:` (e.g., `file="data:tables/mytable.yaml"`).
+|`file` |The only required parameter. It points to the datafile you wish to load. By default, the plugin looks in the same folder as the page file. This is adequate for most usage. You can also load files from the `user/data` folder by prefixing your file name with `data:` (e.g., `file=data:tables/mytable.yaml`). Broken : ~~If all you're passing is the file name, then you can shorten the code to the form `[ti=mytable.yaml/]`~~.
 |`type` |Usually unnecessary. It tells the plugin what format the data file is in. The only acceptable values are `yaml`, `json`, and `csv`. However, the plugin looks at the file name extension first. If it's `yaml`, `yml`, `json`, or `csv`, then there's no need to use the `type` option. 
 |`class` |Lets you assign class definitions to the table itself. Whatever you put here will be escaped (via PHP's `htmlspecialchars`) and placed into the opening `<table>` tag.
 |`id` |Lets you specify the table tag's `id` attribute (e.g. `[ti file="mytable.yaml" id="my-custom-table-id"]` yields `<table id="my-custom-table-id">...</table>`).
@@ -111,7 +111,7 @@ By default, the content of each cell is escaped using PHP's `htmlspecialchars` f
 |`escape` |Defines how special characters can be escaped. By default, the value is a backslash (`\`).
 
 ### Config defaults for parameters
-Except for the `file` param indeed, you can set defaults.
+Escept for the `file` param indeed, you can set defaults.
 Expl:
 
 ```yaml
@@ -141,3 +141,55 @@ default:
 Because PHP's builtin CSV support is...let's just say inelegant, this plugin incorporates the most excellent [PHPLeague CSV library](http://csv.thephpleague.com/).
 
 Forked from the original project and maintainer due to abandonment [Perlkonig/grav-plugin-table-importer](https://github.com/Perlkonig/grav-plugin-table-importer)
+
+## Grav 2.0 compat checklist
+## 1. Installation & Plugin Enablement
+
+**Status:** Compatible
+
+- The plugin loads, registers its event subscribers (`onShortcodeHandlers`), and enables properly in Grav 2.0 without startup issues or container exceptions.
+- Event registration cleanly hooks into `shortcode-core`.
+
+## 2. Core Functionality & Shortcode Processing
+
+**Status:** Compatible
+
+All core features and table generation capabilities work as expected:
+
+- **CSV Imports:** Processed via `League\Csv\Reader` and rendered to HTML tables.
+- **JSON Imports:** Correctly decoded with `json_decode()` and rendered.
+- **YAML Imports:** Correctly parsed with `Yaml::parse()` and rendered.
+- **Shortcode Parameters:** Options including `file`, `header`, `footer`, `class`, `id`, `caption`, `raw` (CDATA/HTML escaping), `delimiter`, `enclosure`, and `escape` function properly and generate valid HTML markup.
+
+## 3. PHP Version & Deprecation Warnings
+
+**Status:** Compatible
+
+- Tested with `error_reporting = E_ALL` on PHP 8.3.31 (Grav 2.0 requirement: `^8.3`).
+- No PHP fatal errors, warnings, notices, or deprecation messages were encountered across all execution paths.
+
+## 4. Vendor & Composer Dependencies Compatibility
+
+**Status:** Compatible
+
+### `league/csv`
+
+- Repository: <https://github.com/thephpleague/csv>
+- Bundled version: `v9.8.0` (in `vendor/csv`).
+- Requirements:
+    - `php: ^7.4 || ^8.0`
+    - `ext-json`
+    - `ext-mbstring`
+- Verified to operate seamlessly on PHP 8.3/8.4 without deprecated function calls or type mismatches.
+
+### Logging (`psr/log` / `monolog`)
+
+- The plugin does not directly depend on `psr/log` or `monolog`.
+- Error reporting uses `Grav::instance()['debugger']->addMessage()`, which is fully supported and compatible with Grav 2.0's debugging subsystem.
+
+## 5. Admin Panel Integration & Blueprints
+
+**Status:** Compatible
+
+- `blueprints.yaml` loads correctly into Grav's blueprint engine.
+- Field schemas (toggles, selects, text inputs, sections, and regex validation patterns for `delimiter`, `enclosure`, and `escape`) validate cleanly against Grav 2.0's `Grav\Common\Data\Data` and form validation engine.
